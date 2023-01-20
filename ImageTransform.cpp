@@ -176,5 +176,50 @@ PNG illinify(PNG image) {
 */
 PNG watermark(PNG firstImage, PNG secondImage) {
 
+  // Check for overlapping x-range and y-range of the two images
+  int overlapWidth = 0;
+  if (firstImage.width() >= secondImage.width()) {
+    overlapWidth = firstImage.width();
+  } else {
+    overlapWidth = secondImage.width();
+  }
+
+  int overlapHeight = 0;
+  if (firstImage.height() >= secondImage.height()) {
+    overlapHeight = firstImage.height();
+  } else {
+    overlapHeight = secondImage.height();
+  }
+
+  for (int x = 0; x < overlapWidth; x++) {
+    for (int y = 0; y < overlapHeight; y++) {
+      HSLAPixel & pixel1 = firstImage.getPixel(x, y);
+      HSLAPixel & pixel2 = secondImage.getPixel(x, y);
+
+      // Only adjust base image where second image has something non-zero
+      if (pixel2.l >= 1.0) {
+        pixel1.l = pixel1.l + 0.2;
+        if (pixel1.l > 1.0) {
+          pixel1.l = 1.0;
+        }  
+      }
+      /*
+      cout << "pixel1.h: " << pixel1.h << endl;
+      cout << "pixel1.s: " << pixel1.s << endl;
+      cout << "pixel1.l: " << pixel1.l << endl;
+      cout << "pixel1.a: " << pixel1.a << endl;
+      cout << "pixel2.h: " << pixel2.h << endl;
+      cout << "pixel2.s: " << pixel2.s << endl;
+      cout << "pixel2.l: " << pixel2.l << endl;
+      cout << "pixel2.a: " << pixel2.a << endl;
+      */
+
+      // Custom breakpoint
+      /*
+      int hold;
+      std::cin >> hold;
+      */
+    }
+  }
   return firstImage;
 }
