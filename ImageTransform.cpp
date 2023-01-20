@@ -70,6 +70,38 @@ PNG grayscale(PNG image) {
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
 
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+
+      int deltaX = abs(centerX - (int)x);
+      int deltaY = abs(centerY - (int)y);
+      double distance = sqrt((deltaX * deltaX) + (deltaY * deltaY));
+
+      /* 
+      cout << "centerX: " << centerX << endl << "centerY: " << centerY << endl;
+      cout << "x: " << x << endl << "y: " << y << endl;
+      cout << "deltaX: " << deltaX << endl << "deltaY: " << deltaY << endl;
+      cout << "distance: " << distance << endl;
+      */
+
+      double reductionPercentAsDecimal = distance * 0.005;
+      if (reductionPercentAsDecimal > 0.8) {
+        reductionPercentAsDecimal = 0.8;
+      }
+
+      double reductionFactor = 1 - reductionPercentAsDecimal;
+      pixel.l = pixel.l * reductionFactor;
+
+      /*
+      // Custom breakpoint
+      if (true) {
+        int hold;
+        std::cin >> hold;
+      }
+      */
+    }
+  }
   return image;
   
 }
