@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <vector>
+#include <algorithm>
 
 #include "uiuc/PNG.h"
 #include "uiuc/HSLAPixel.h"
@@ -85,7 +87,46 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
 **/
 PNG illinify(PNG image) {
 
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+
+      // Each color can be reached by going two different directions on the circle.
+      // Calculate distance both directions for both colors, and select min
+      // Indices are toBlue1, toBlue2, toOrange1, toOrange2
+      std::vector<double> colorDistance = {0, 0, 0, 0};
+      colorDistance[0] = abs(216-pixel.h);
+      colorDistance[1] = (360-pixel.h) + 216;
+      colorDistance[2] = abs(11-pixel.h);
+      colorDistance[3] = (360-pixel.h) + 11;
+      //std::cout << "colorDistance: " << colorDistance[0] << " " << colorDistance[1] << " " << colorDistance[2] << " " << colorDistance[3] << std::endl;
+      if (min(colorDistance[0], colorDistance[1]) < min(colorDistance[2], colorDistance[3])) {
+        pixel.h = 216;
+        //std::cout << "Selected Blue" << std::endl << std::endl;
+      } else {
+        pixel.h = 11;
+        //std::cout << "Selected Orange" << std::endl << std::endl;
+      }
+
+      // Custom breakpoint
+      //int hold;
+      //std::cin >> hold;
+    }
+  }
+
   return image;
+  /*
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+
+      // `pixel` is a reference to the memory stored inside of the PNG `image`,
+      // which means you're changing the image directly. No need to `set`
+      // the pixel since you're directly changing the memory of the image.
+      pixel.s = 0;
+    }
+  }
+  */
 }
  
 
